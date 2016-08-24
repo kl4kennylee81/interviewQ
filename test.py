@@ -605,6 +605,13 @@ def alienOrdering(word_li):
 
 
 
+# edge from [d][b] from d -> b d is less than b. since nothing is greater than d. then d has no outgoing edges
+# thus you delete every edge where d is the sink of and add d as the start of the order
+
+# how to process this is using an adjacency list which is a dictionary mapped to a set
+# for each letter check if it is in the adjacency list. if it has no outgoing edges add it
+# to the ordering than reach inside and delete the incoming edges to d.
+
 def makePairGraph(pairs,letters,letterToIndex):
     for a,b in pairs:
         letters.add(a);
@@ -623,6 +630,12 @@ def makePairGraph(pairs,letters,letterToIndex):
     for a,b in pairs:
         graph[letterToIndex[a]][letterToIndex[b]] = 1;
 
+    return graph;
+
+def makePairGraph(pairs):
+    graph = dict();
+    for a,b in pairs:
+        graph.setdefault(a,set()).add(b);
     return graph;
 
 
@@ -665,6 +678,42 @@ def makePairs(word_li,index):
 
     return pair_list;
 
+def createGraph(graph,li,numIndent,curParent):
+    if (len(li) == 0):
+        return 0
+    i = 0
+    while (i < len(li)):
+        curIndent = li[i].count(" ")
+        entry = li[i]
+        print(curParent+":"+entry)
+        if curIndent == numIndent+2:
+            prevEntry = li[i-1]
+            prevIndent = li[i-1].count(" ")
+            i+=createGraph(graph,li[i:],prevIndent,prevEntry)
+
+        elif curIndent == numIndent+1:
+            graph.setdefault(curParent.strip(),set()).add(entry.strip())
+            i+=1
+        else:
+            return i
+
+    return i
+
+
+def DFS(graph,curNode,curPath):
+    path_li = []
+    for entry in graph[curNode]:
+        if (entry in graph):
+            path_li+=DFS(graph,entry,curPath + "/"+entry)
+        else:
+            full_path = curPath + "/"+ entry.strip()
+            if "." in entry:
+                extension = entry.split(".")[-1]
+                pic_extensions = set(["gif","jpeg"])
+                if extension in pic_extensions:
+                    path_li.append(full_path)
+
+    return path_li
 
 
 
@@ -734,10 +783,32 @@ def main():
     # print(card_list);
 
 
-    word_li = ["baa","abcd","abca","cad","cab"];
-    order = alienOrdering(word_li);
+    # word_li = ["baa","abcd","abca","cad","cab"];
+    # order = alienOrdering(word_li);
 
-    print(order);
+    # print(order);
+    graph = dict()
+    dirString ='''dir1
+ dir11
+  file1.gif
+  file2.txt
+ dir12
+  file3.gif
+  file4.txt
+dir2
+ dir21
+  file5.gif
+  file6.txt
+ dir22
+  file7.txt'''
+    dirList = dirString.split("\n")
+
+    print(dirList)
+
+    createGraph(graph,dirList,-1,"/")
+    path_li = DFS(graph,"/","")
+    print(graph)
+    print(path_li)
 
 
 if __name__ == "__main__":
