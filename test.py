@@ -716,6 +716,18 @@ def DFS(graph,curNode,curPath):
     return path_li
 
 
+def solution(S):
+    entryLi = S.split("\n")
+    graph = dict()
+    createGraph(graph,entryLi,-1,"/")
+
+    path_li = DFS(graph,"/","")
+
+    total_len = 0
+    for path in path_li:
+        total_len += len(path)
+
+    return total_len
 
 
 
@@ -801,14 +813,8 @@ dir2
   file6.txt
  dir22
   file7.txt'''
-    dirList = dirString.split("\n")
 
-    print(dirList)
-
-    createGraph(graph,dirList,-1,"/")
-    path_li = DFS(graph,"/","")
-    print(graph)
-    print(path_li)
+  print(solution(dirString))
 
 
 if __name__ == "__main__":
