@@ -685,7 +685,6 @@ def createGraph(graph,li,numIndent,curParent):
     while (i < len(li)):
         curIndent = li[i].count(" ")
         entry = li[i]
-        print(curParent+":"+entry)
         if curIndent == numIndent+2:
             prevEntry = li[i-1]
             prevIndent = li[i-1].count(" ")
@@ -723,6 +722,7 @@ def solution(S):
 
     path_li = DFS(graph,"/","")
 
+    print(path_li)
     total_len = 0
     for path in path_li:
         total_len += len(path)
@@ -811,10 +811,13 @@ dir2
  dir21
   file5.gif
   file6.txt
+  dir211
+   file7.gif
  dir22
-  file7.txt'''
+  file8.txt'''
 
-  print(solution(dirString))
+    total_len = solution(dirString)
+    print(total_len)
 
 
 if __name__ == "__main__":
