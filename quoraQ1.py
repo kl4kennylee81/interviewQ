@@ -1,7 +1,7 @@
 import collections
 import sys
 import fileinput
-# import timing
+#import timing
 
 '''
 Quora Challenge 1: Upvotes
@@ -51,9 +51,9 @@ def solution():
     num_list+=line.strip().split(" ")
 
   num_list = map(long, num_list)
-  # num_list = num_list[:2235]
-
-  # n = 2234
+  
+  # n = 87006
+  # num_list = num_list[:n+1]
 
   window_sr_li = upVote(num_list,n,k)
 
@@ -78,57 +78,89 @@ def numZerosInARow(compareTo,start,end):
   # get leftmost contiguous streak of numbers
   # positive being a streak of nondecreasing numbers
   # negative being a streak of nonincreasing numbers
-def numInARow(compareTo,start,end,nonDecreasing):
-  if (len(compareTo) > 0):
-    # find number of zeros in a row
-    numZeros_InARow = numZerosInARow(compareTo,start,end)
-    first_nonZero_i = start+numZeros_InARow
+# def numInARow(compareTo,start,end,nonDecreasing):
+#   if (len(compareTo) > 0):
+#     # find number of zeros in a row
+#     numZeros_InARow = numZerosInARow(compareTo,start,end)
+#     first_nonZero_i = start+numZeros_InARow
 
-    if (first_nonZero_i < end):
-      if ((nonDecreasing and compareTo[first_nonZero_i] != -1) or
-          (not nonDecreasing and compareTo[first_nonZero_i] != 1)):
-        streak = compareTo[first_nonZero_i] + sign(compareTo[first_nonZero_i])*numZeros_InARow
-        i = first_nonZero_i + 1
-        while(i < end):
-          if (sign(compareTo[i]) == 0):
-            streak += sign(streak)
-            i+=1
+#     if (first_nonZero_i < end):
+#       if ((nonDecreasing and compareTo[first_nonZero_i] != -1) or
+#           (not nonDecreasing and compareTo[first_nonZero_i] != 1)):
+#         streak = compareTo[first_nonZero_i] + sign(compareTo[first_nonZero_i])*numZeros_InARow
+#         i = first_nonZero_i + 1
+#         while(i < end):
+#           if (sign(compareTo[i]) == 0):
+#             streak += sign(streak)
+#             i+=1
           
-          elif sign(streak) == sign(compareTo[i]):
-            streak += compareTo[i]
-            i+=1
-          else:
-            break
+#           elif sign(streak) == sign(compareTo[i]):
+#             streak += compareTo[i]
+#             i+=1
+#           else:
+#             break
 
-        return streak
-      else:
-        if nonDecreasing:
-          return numZeros_InARow;
-        else:
-          return -numZeros_InARow;
+#         return streak
+#       else:
+#         if nonDecreasing:
+#           return numZeros_InARow;
+#         else:
+#           return -numZeros_InARow;
+#     else:
+#         if nonDecreasing:
+#           return numZeros_InARow;
+#         else:
+#           return -numZeros_InARow;
+
+
+#   else:
+#     return 0
+
+def numInARowNonDecreasing(compareTo,start,end):
+  streak = 0
+  inARow_li = collections.deque()
+  for i in range(start,end):
+    if sign(compareTo[i]) >= 0:
+      streak+=1
     else:
-        if nonDecreasing:
-          return numZeros_InARow;
-        else:
-          return -numZeros_InARow;
+      inARow_li.append(streak)
+      if (streak != 0):
+        inARow_li.append(0)
+  
+  if streak > 0:
+    inARow_li.append(streak)
+  return inARow_li
+
+def numInARowNonIncreasing(compareTo,start,end):
+  streak = 0
+  inARow_li = collections.deque()
+  for i in range(start,end):
+    if sign(compareTo[i]) <= 0:
+      streak-=1
+    else:
+      inARow_li.append(streak)
+      if (streak != 0):
+        inARow_li.append(0)
+
+  if streak < 0:
+    inARow_li.append(streak)
+  return inARow_li
 
 
-  else:
-    return 0
-  # for i in range(start,end):
-  #   x = 1
 
 def getInARowList(compareTo,start,end,nonDecreasing):
   i = start
-  inARow_li = collections.deque()
-  while(i < end):
-    streak = numInARow(compareTo,i,end,nonDecreasing)
-    if (streak != 0):
-      inARow_li.append(streak)
-      i+=abs(streak)
-    else:
-      inARow_li.append(0)
-      i+=1
+  numInARow = ((lambda i,end,compareTo=compareTo:numInARowNonDecreasing(compareTo,i,end)) if 
+    nonDecreasing else (lambda i,end,compareTo=compareTo:numInARowNonIncreasing(compareTo,i,end)))
+  # while(i < end):
+  #   streak = numInARow(i,end)
+  #   if (streak != 0):
+  #     inARow_li.append(streak)
+  #     i+=abs(streak)
+  #   else:
+  #     inARow_li.append(0)
+  #     i+=1
+  inARow_li = numInARow(start,end)
   return inARow_li
 
 def getNumSubRanges(inARowList):
