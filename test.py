@@ -439,6 +439,12 @@ class Node:
         self.ub = ub;
 
 
+    def __init__(self,left,right,val):
+        self.left = left;
+        self.right = right;
+        self.val = val;  
+
+
 
 
 # returns a tree
@@ -731,6 +737,60 @@ def solution(S):
     return total_len
 
 
+def fillBucket(li):
+
+    range_li = []
+    
+    maxLeft = 0
+    for i in range(len(li)):
+        if li[i] > maxLeft:
+            maxLeft = li[i]
+        range_li.append(maxLeft)
+
+    maxRight = 0
+    for i in range(len(li)-1,-1,-1):
+        if li[i] > maxRight:
+            maxRight = li[i]
+
+        range_li[i] = min(range_li[i],maxRight)
+
+    total_sum = 0
+    for i in range(len(li)):
+        total_sum+=(range_li[i] - li[i])
+
+    return total_sum
+
+def list_addition(add1,add2):
+
+    carryBit = [0 for i in range(max(len(add1),len(add2)) + 1)]
+    bigger = add1 if len(add1) > len(add2) else add2
+    smaller = add1 if len(add1) <= len(add2) else add2
+
+    output = [0 for i in range(max(len(add1),len(add2)))]
+    for i in range(max(len(add1),len(add2))-1,-1,-1):
+        if i < len(smaller):
+            sum_t = bigger[i] + smaller[i] + carryBit[i+1]
+            if sum_t >= 10:
+                carryBit[i] = sum_t / 10
+            output[i] = str(sum_t % 10)
+
+    strNum = str(carryBit[0]) + "".join(output)
+    return int(strNum)
+
+# we can also memoize the values
+def maxSumPath(tree_n):
+    if (tree_n == None):
+        return 0
+
+    if not tree_n.left and not tree_n.right:
+        return tree_n.val
+    else:
+        return max(tree_n.val + maxSumPath(tree_n.left),tree_n.val + maxSumPath(tree_n.right))
+
+# make change problem
+# minimum number given list of x coins for y change
+
+
 
 
 def main():
@@ -800,25 +860,33 @@ def main():
     # order = alienOrdering(word_li);
 
     # print(order);
-    graph = dict()
-    dirString ='''dir1
- dir11
-  file1.gif
-  file2.txt
- dir12
-  file3.gif
-  file4.txt
-dir2
- dir21
-  file5.gif
-  file6.txt
-  dir211
-   file7.gif
- dir22
-  file8.txt'''
+#     graph = dict()
+#     dirString ='''dir1
+#  dir11
+#   file1.gif
+#   file2.txt
+#  dir12
+#   file3.gif
+#   file4.txt
+# dir2
+#  dir21
+#   file5.gif
+#   file6.txt
+#   dir211
+#    file7.gif
+#  dir22
+#   file8.txt'''
 
-    total_len = solution(dirString)
-    print(total_len)
+#     total_len = solution(dirString)
+#     print(total_len)
+    # x = [2,5,1,2,3,4,7,7,6]
+    # total_sum = fillBucket(x)
+    # print(total_sum)
+
+    add1 = [9,2,3,8]
+    add2 = [1,2,3,4]
+    sum_t =list_addition(add1,add2)
+    print(sum_t)
 
 
 if __name__ == "__main__":
