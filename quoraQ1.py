@@ -176,9 +176,6 @@ def updateSubRangeWindows(compareTo,inARowList,curSubRange,windows,k,nonDecreasi
         inARowList.append(curNewEntry)
         curSubRanges += curNewEntry
 
-      print("part 1:"+str(curSubRanges))
-      print(inARowList)
-
       if (sign(curDeletedEntry) == -1 and nonDecreasing or
           sign(curDeletedEntry) == 1 and not nonDecreasing):
           inARowList.popleft()
@@ -195,8 +192,6 @@ def updateSubRangeWindows(compareTo,inARowList,curSubRange,windows,k,nonDecreasi
           curSubRanges -= inARowList[0]
           inARowList[0] = diff
 
-      print("part 2:"+str(curSubRanges))
-      print(inARowList)
       windows[i]+=curSubRanges
 
   return windows
@@ -213,22 +208,16 @@ def upVote(li,n,k):
   windows = [0 for i in range(numWindows)]
 
   inARowListPlus = getInARowList(compareTo,0,k-1,True)
-  print(inARowListPlus)
   curSubRangesPlus = getNumSubRanges(compareTo,0,k-1,True)
 
   windows[0]+=curSubRangesPlus
-  #windows = updateSubRangeWindows(compareTo,inARowListPlus,curSubRangesPlus,windows,k,True)
-
-  print("plus"+str(windows))
+  windows = updateSubRangeWindows(compareTo,inARowListPlus,curSubRangesPlus,windows,k,True)
 
   inARowListMinus = getInARowList(compareTo,0,k-1,False)
-  print(inARowListMinus)
   curSubRangesMinus = getNumSubRanges(compareTo,0,k-1,False)
 
   windows[0]+=curSubRangesMinus
-  #windows = updateSubRangeWindows(compareTo,inARowListMinus,curSubRangesMinus,windows,k,False)
-
-  print("minus"+str(windows))
+  windows = updateSubRangeWindows(compareTo,inARowListMinus,curSubRangesMinus,windows,k,False)
 
   return windows
 
