@@ -1,7 +1,5 @@
 import collections
-import sys
 import fileinput
-#import timing
 
 '''
 Quora Challenge 1: Upvotes
@@ -51,9 +49,6 @@ def solution():
     num_list+=line.strip().split(" ")
 
   num_list = map(long, num_list)
-  
-  # n = 87006
-  # num_list = num_list[:n+1]
 
   window_sr_li = upVote(num_list,n,k)
 
@@ -63,6 +58,30 @@ def solution():
 
   for entry in num_list:
     continue
+
+def upVote(li,n,k):
+  
+  if len(li) == 0 or n == 0:
+    return []
+
+  compareTo = createCompareTo(li,n,k)
+
+  numWindows = n-k+1
+  windows = [0 for i in range(numWindows)]
+
+  inARowListPlus = getInARowList(compareTo,0,k-1,True)
+  curSubRangesPlus = getNumSubRanges(inARowListPlus)
+
+  windows[0]+=curSubRangesPlus
+  windows = updateSubRangeWindows(compareTo,inARowListPlus,curSubRangesPlus,windows,k,True)
+
+  inARowListMinus = getInARowList(compareTo,0,k-1,False)
+  curSubRangesMinus = getNumSubRanges(inARowListMinus)
+
+  windows[0]+=curSubRangesMinus
+  windows = updateSubRangeWindows(compareTo,inARowListMinus,curSubRangesMinus,windows,k,False)
+
+  return windows
   
 def sign(x): return (x > 0) - (x < 0)
 
@@ -75,47 +94,6 @@ def numZerosInARow(compareTo,start,end):
       break
   return numZeros
 
-  # get leftmost contiguous streak of numbers
-  # positive being a streak of nondecreasing numbers
-  # negative being a streak of nonincreasing numbers
-# def numInARow(compareTo,start,end,nonDecreasing):
-#   if (len(compareTo) > 0):
-#     # find number of zeros in a row
-#     numZeros_InARow = numZerosInARow(compareTo,start,end)
-#     first_nonZero_i = start+numZeros_InARow
-
-#     if (first_nonZero_i < end):
-#       if ((nonDecreasing and compareTo[first_nonZero_i] != -1) or
-#           (not nonDecreasing and compareTo[first_nonZero_i] != 1)):
-#         streak = compareTo[first_nonZero_i] + sign(compareTo[first_nonZero_i])*numZeros_InARow
-#         i = first_nonZero_i + 1
-#         while(i < end):
-#           if (sign(compareTo[i]) == 0):
-#             streak += sign(streak)
-#             i+=1
-          
-#           elif sign(streak) == sign(compareTo[i]):
-#             streak += compareTo[i]
-#             i+=1
-#           else:
-#             break
-
-#         return streak
-#       else:
-#         if nonDecreasing:
-#           return numZeros_InARow;
-#         else:
-#           return -numZeros_InARow;
-#     else:
-#         if nonDecreasing:
-#           return numZeros_InARow;
-#         else:
-#           return -numZeros_InARow;
-
-
-#   else:
-#     return 0
-
 def numInARowNonDecreasing(compareTo,start,end):
   streak = 0
   inARow_li = collections.deque()
@@ -125,6 +103,7 @@ def numInARowNonDecreasing(compareTo,start,end):
     else:
       inARow_li.append(streak)
       if (streak != 0):
+        streak = 0
         inARow_li.append(0)
   
   if streak > 0:
@@ -140,6 +119,7 @@ def numInARowNonIncreasing(compareTo,start,end):
     else:
       inARow_li.append(streak)
       if (streak != 0):
+        streak = 0
         inARow_li.append(0)
 
   if streak < 0:
@@ -152,14 +132,7 @@ def getInARowList(compareTo,start,end,nonDecreasing):
   i = start
   numInARow = ((lambda i,end,compareTo=compareTo:numInARowNonDecreasing(compareTo,i,end)) if 
     nonDecreasing else (lambda i,end,compareTo=compareTo:numInARowNonIncreasing(compareTo,i,end)))
-  # while(i < end):
-  #   streak = numInARow(i,end)
-  #   if (streak != 0):
-  #     inARow_li.append(streak)
-  #     i+=abs(streak)
-  #   else:
-  #     inARow_li.append(0)
-  #     i+=1
+
   inARow_li = numInARow(start,end)
   return inARow_li
 
@@ -243,38 +216,8 @@ def updateSubRangeWindows(compareTo,inARowList,curSubRange,windows,k,nonDecreasi
 
   return windows
 
-
-def upVote(li,n,k):
-  
-  if len(li) == 0 or n == 0:
-    return []
-
-  compareTo = createCompareTo(li,n,k)
-
-  numWindows = n-k+1
-  windows = [0 for i in range(numWindows)]
-
-  inARowListPlus = getInARowList(compareTo,0,k-1,True)
-  curSubRangesPlus = getNumSubRanges(inARowListPlus)
-
-  windows[0]+=curSubRangesPlus
-  windows = updateSubRangeWindows(compareTo,inARowListPlus,curSubRangesPlus,windows,k,True)
-
-  inARowListMinus = getInARowList(compareTo,0,k-1,False)
-  curSubRangesMinus = getNumSubRanges(inARowListMinus)
-
-  windows[0]+=curSubRangesMinus
-  windows = updateSubRangeWindows(compareTo,inARowListMinus,curSubRangesMinus,windows,k,False)
-
-  return windows
-
 def main():
-  # 5 3
-  # 1 2 3 1 1
-
   solution()
-
-  # li = [1,2,3,1,1]
 
 if __name__ == "__main__":
   main()
