@@ -1,6 +1,7 @@
 import collections
 import sys
 import fileinput
+# import timing
 
 '''
 Quora Challenge 1: Upvotes
@@ -50,12 +51,18 @@ def solution():
     num_list+=line.strip().split(" ")
 
   num_list = map(long, num_list)
+  # num_list = num_list[:2235]
+
+  # n = 2234
 
   window_sr_li = upVote(num_list,n,k)
-  
+
   for entry in window_sr_li:
     print(entry)
   return window_sr_li
+
+  for entry in num_list:
+    continue
   
 def sign(x): return (x > 0) - (x < 0)
 
@@ -76,31 +83,40 @@ def numInARow(compareTo,start,end,nonDecreasing):
     # find number of zeros in a row
     numZeros_InARow = numZerosInARow(compareTo,start,end)
     first_nonZero_i = start+numZeros_InARow
-    if ((nonDecreasing and compareTo[first_nonZero_i] != -1) or
-        (not nonDecreasing and compareTo[first_nonZero_i] != 1)):
-      streak = compareTo[first_nonZero_i] + sign(compareTo[first_nonZero_i])*numZeros_InARow
-      i = first_nonZero_i + 1
-      while(i < end):
-        if (sign(compareTo[i]) == 0):
-          streak += sign(streak)
-          i+=1
-        
-        elif sign(streak) == sign(compareTo[i]):
-          streak += compareTo[i]
-          i+=1
-        else:
-          break
 
-      return streak
-    else:
-      if nonDecreasing:
-        return numZeros_InARow;
+    if (first_nonZero_i < end):
+      if ((nonDecreasing and compareTo[first_nonZero_i] != -1) or
+          (not nonDecreasing and compareTo[first_nonZero_i] != 1)):
+        streak = compareTo[first_nonZero_i] + sign(compareTo[first_nonZero_i])*numZeros_InARow
+        i = first_nonZero_i + 1
+        while(i < end):
+          if (sign(compareTo[i]) == 0):
+            streak += sign(streak)
+            i+=1
+          
+          elif sign(streak) == sign(compareTo[i]):
+            streak += compareTo[i]
+            i+=1
+          else:
+            break
+
+        return streak
       else:
-        return -numZeros_InARow;
+        if nonDecreasing:
+          return numZeros_InARow;
+        else:
+          return -numZeros_InARow;
+    else:
+        if nonDecreasing:
+          return numZeros_InARow;
+        else:
+          return -numZeros_InARow;
 
 
   else:
     return 0
+  # for i in range(start,end):
+  #   x = 1
 
 def getInARowList(compareTo,start,end,nonDecreasing):
   i = start
@@ -115,9 +131,8 @@ def getInARowList(compareTo,start,end,nonDecreasing):
       i+=1
   return inARow_li
 
-def getNumSubRanges(compareTo,start,end,nonDecreasing):
+def getNumSubRanges(inARowList):
 
-  inARowList = getInARowList(compareTo,start,end,nonDecreasing)
   numSubRanges = 0
   for entry in inARowList:
     numSubRanges += signedSumtoN(entry + sign(entry))
@@ -208,13 +223,13 @@ def upVote(li,n,k):
   windows = [0 for i in range(numWindows)]
 
   inARowListPlus = getInARowList(compareTo,0,k-1,True)
-  curSubRangesPlus = getNumSubRanges(compareTo,0,k-1,True)
+  curSubRangesPlus = getNumSubRanges(inARowListPlus)
 
   windows[0]+=curSubRangesPlus
   windows = updateSubRangeWindows(compareTo,inARowListPlus,curSubRangesPlus,windows,k,True)
 
   inARowListMinus = getInARowList(compareTo,0,k-1,False)
-  curSubRangesMinus = getNumSubRanges(compareTo,0,k-1,False)
+  curSubRangesMinus = getNumSubRanges(inARowListMinus)
 
   windows[0]+=curSubRangesMinus
   windows = updateSubRangeWindows(compareTo,inARowListMinus,curSubRangesMinus,windows,k,False)
