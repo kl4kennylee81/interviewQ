@@ -790,8 +790,206 @@ def maxSumPath(tree_n):
 # make change problem
 # minimum number given list of x coins for y change
 
+def diagonal_print(matrix):
+
+    m = len(matrix)
+    n = len(matrix[0])
+    for k in range(1,len(matrix)+len(matrix[0])-1):
+        start_col = max(k-m,0)
+        num_elements = min(k,m-start_col,n)
+
+        for j in range(start_col,m):
+            i = k - j - 1
+            print(m[i][j])
 
 
+# def mostInterval(arrival,leave):
+
+#     timeList = []
+
+#     for time in arrival:
+#         timeList += (True,time)
+
+#     for time in leave:
+#         timeList += (False,time)
+
+#     sort(timeList,key=(lambda x:x[1]))
+
+#     number_in = 0
+#     max_time = 0
+#     for isArrival,time in timeList:
+#         if isArrival:
+            
+#         else:
+
+def isInterleave(s1, s2, s3):
+    """
+    :type s1: str
+    :type s2: str
+    :type s3: str
+    :rtype: bool
+    """
+    pass1 = interleavehelper(s1,s2,s3);
+    
+    if (pass1):
+        return True
+    else:
+        pass2 = interleavehelper(s2,s1,s3)
+        return pass2
+
+def interleavehelper(s1,s2,s3):
+    a = [0 for i in range(len(s3))]
+    s1_ptr = 0
+    for i in range(len(s3)):
+        if s1[s1_ptr] == s3[i]:
+            s1_ptr+=1
+            a[i] = 1
+        if s1_ptr == len(s1):
+            break
+
+    # print(s1)
+    # print(s3)
+    # print(a)
+
+    if (s1_ptr != (len(s1))):
+        return False
+
+    s2_ptr = len(s2)-1
+    for i in range(len(s3)-1,-1,-1):
+        if s2_ptr == 0:
+            break
+        if a[i] == 1:
+            continue
+        if s2[s2_ptr] == s3[i]:
+            s2_ptr-=1
+            a[i] = 2
+        else:
+            return False
+    # print(s2)
+    # print(s3)
+    # print(a)
+    return True
+
+class Solution(object):
+    def isInterleave(self,s1, s2, s3):
+        """
+        :type s1: str
+        :type s2: str
+        :type s3: str
+        :rtype: bool
+        """
+        pass1 = self.interleavehelper(s1,s2,s3);
+        
+        if (pass1):
+            return True
+        else:
+            pass2 = self.interleavehelper(s2,s1,s3)
+            if (pass2):
+                return True
+            else:
+                pass3 = self.interleavehelper(s1[::-1],s2[::-1],s3[::-1])
+                if (pass3):
+                    return True
+                else:
+                    pass4 = self.interleavehelper(s2[::-1],s1[::-1],s3[::-1])
+                    return pass4
+                    
+    def interleavehelper(self,s1,s2,s3):
+        a = [0 for i in range(len(s3))]
+        s1_ptr = 0
+        for i in range(len(s3)):
+            if s1_ptr == len(s1):
+                break
+            if s1[s1_ptr] == s3[i]:
+                s1_ptr+=1
+                a[i] = 1
+    
+        print(s1)
+        print(s3)
+        print(a)
+    
+        if (s1_ptr != (len(s1))):
+            return False
+        else:
+            
+            s2_ptr = len(s2)-1
+            if (len(s2) == 0):
+                if (len(s1) == len(s3)):
+                    return True
+                else:
+                    return False
+            else:
+                s2_ptr = max(len(s2)-1,0)
+                for i in range(len(s3)-1,-1,-1):
+                    if s2_ptr < 0:
+                        break
+                    if a[i] == 1:
+                        continue
+                    if s2[s2_ptr] == s3[i]:
+                        s2_ptr-=1
+                        a[i] = 2
+                    else:
+                        return False
+                
+                print(s2)
+                print(s3)
+                print(a)
+
+                if (s2_ptr != -1):
+                    return False
+                else:
+                    for ele in a:
+                        if (ele == 0):
+                            return False;
+                    return True
+        
+
+# Please use this Google doc to code during your interview. To free your hands for coding, we recommend that you use a headset or a phone with speaker option.
+
+# def numIslands(matrix):
+
+#     visited = set()
+#     num_islands = 0
+#     for i in range(len(matrix)):
+#         for j in range(len(matrix[0]):
+#             if matrix[i][j] == 1 and (i,j) not in visited:
+#             # run a bft starting at index i,j marking everything       in that component as visited
+#                 bft(i,j,matrix,visited)
+#                 num_islands+=1
+#     return num_islands
+
+
+# def bft(i,j,matrix,visited):
+#     frontier = deque()
+#     queue_t.append((i,j))
+#     while (len(queue_t) > 0):
+#         cur_i,cur_j = queue_t.popLeft()
+#         visited.add(cur_i,cur_j)
+#         # add directions that are non 0 and not visited into the queue
+#         for neighbor in getNeighbors(cur_i,cur_j,matrix):
+#             if neighbor not in visited:
+#                 queue_t.append((cur_i,cur_j))
+
+#     return
+        
+
+# def addPossibleDirections(cur_i,cur_j,matrix,visited,queue_t):
+#     num_rows = len(matrix)
+#     num_cols = len(matrix[0])
+#     # check right and up
+#     up_i,up_j = (cur_i+1,cur_j)
+
+#     if (up_i > num_rows and not in visited):
+#         queue_t.append((up_i,up_j))
+
+#     right_i,right_j = (cur_i,cur_j+1)
+
+#     if (right_j > num_cols and not in visited):
+#         queue_t.append((right_i,right_j))
+#     return
+
+            
+        
 
 def main():
     print("we have begun\n");
@@ -883,10 +1081,16 @@ def main():
     # total_sum = fillBucket(x)
     # print(total_sum)
 
-    add1 = [9,2,3,8]
-    add2 = [1,2,3,4]
-    sum_t =list_addition(add1,add2)
-    print(sum_t)
+    # add1 = [9,2,3,8]
+    # add2 = [1,2,3,4]
+    # sum_t =list_addition(add1,add2)
+    # print(sum_t)
+
+    s1 = "cacabcbaccbbcbb"
+    s2 = "acaaccaacbbbabbacc"
+    s3 = "accacaabcbacaccacacbbbbcbabbbbacc"
+    interleaved = Solution().isInterleave(s1,s2,s3)
+    print(interleaved)
 
 
 if __name__ == "__main__":

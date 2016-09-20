@@ -85,15 +85,6 @@ def upVote(li,n,k):
   
 def sign(x): return (x > 0) - (x < 0)
 
-def numZerosInARow(compareTo,start,end):
-  numZeros = 0
-  for i in range(start,end):
-    if (compareTo[i] == 0):
-      numZeros += 1
-    else:
-      break
-  return numZeros
-
 def numInARowNonDecreasing(compareTo,start,end):
   streak = 0
   inARow_li = collections.deque()
@@ -125,7 +116,6 @@ def numInARowNonIncreasing(compareTo,start,end):
   if streak < 0:
     inARow_li.append(streak)
   return inARow_li
-
 
 
 def getInARowList(compareTo,start,end,nonDecreasing):
