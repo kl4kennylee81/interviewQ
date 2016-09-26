@@ -134,7 +134,7 @@ def runComparator(json):
     return min_t,min_route
 
 def main():
-    fname = "sampleChart.json"
+    fname = "chart.json"
     output_name = "output.json"
     if len(sys.argv[1:]) > 0:
         fname = sys.argv[1]
