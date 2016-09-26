@@ -34,10 +34,13 @@ def isHit(posToAsteroid,pos,t,blast_pos):
     # hit eschaton
     if pos < 0:
         return True
+    # hit by blast
     elif pos < blast_pos:
         return True
+    # initial position safe checked after blast
     elif pos == 0:
         return False
+    # past asteroid belt
     elif pos >= len(posToAsteroid):
         return False
     else:
