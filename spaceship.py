@@ -29,7 +29,7 @@ def simulateRoute(route,escapePos,posToAsteroid,blast_time):
                 return t+1
     return -1
 
-# array mapping position index -> asteroid
+# posToAsteroid: array mapping position index -> asteroid
 def isHit(posToAsteroid,pos,t,blast_pos):
     # hit eschaton
     if pos < 0:
@@ -58,15 +58,11 @@ def nextLayer(entry,blast_pos):
             nextLayer.append((up_p,up_v,up_course))
     return nextLayer
 
-
-
 def dynamicRouteFinder(blast_t,escapePos,asteroid_li):
     velocity_bound = escapePos*2
     time_bound = blast_t * escapePos
     pos_bound = escapePos*2
-    # rows is the possible velocity
-    # columns are the time t
-    # values are the position
+
     prev_frontier = dict()
     initial_state = (0,0)
     prev_frontier[initial_state] = []
@@ -154,13 +150,6 @@ def main():
 
         with open(output_name,'w') as output:
             output.write(route_json)
-    else:
-        print("no solution")
-
-
-
-
-
 
 if __name__ == "__main__":
     main()
